@@ -1,0 +1,50 @@
+{
+  "recommendation_engine": {
+    "score_weights": {
+      "usage_match": 0.7,
+      "price_advantage": 0.3
+    },
+    "thresholds": {
+      "budget_tolerance": 1.2,
+      "waste_penalty": 0.1,
+      "perfect_match_ratio": 1.5
+    },
+    "max_recommendations": 10
+  },
+  "ui_settings": {
+    "window_size": {
+      "width": 1200,
+      "height": 800
+    },
+    "theme": {
+      "background_color": "#f0f8ff",
+      "primary_color": "#2c3e50",
+      "secondary_color": "#34495e"
+    },
+    "default_values": {
+      "data": 30,
+      "calls": 500,
+      "budget": 150
+    }
+  },
+  "api_settings": {
+    "host": "127.0.0.1",
+    "port": 5000,
+    "debug": false,
+    "cors_enabled": true
+  },
+  "data_sources": {
+    "enabled_carriers": [
+      "中国移动"
+    ],
+    "custom_data_files": []
+  },
+  "validation": {
+    "min_data": 1,
+    "max_data": 500,
+    "min_calls": 0,
+    "max_calls": 10000,
+    "min_budget": 50,
+    "max_budget": 1000
+  }
+} 
