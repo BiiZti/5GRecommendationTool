@@ -9,8 +9,8 @@ from tkinter import ttk, messagebox, scrolledtext
 from typing import Optional, Dict, List, Any
 
 # 导入新的模块化组件
-from recommendation_engine import RecommendationEngine
-from data_sources import DataSourceManager
+from .recommendation_engine import RecommendationEngine
+from .data_sources import DataSourceManager
 
 class RecommendationApp:
     """主应用程序类"""
@@ -255,7 +255,7 @@ class RecommendationApp:
         self.result_text.insert(tk.END, f"💾 月流量需求: {data}GB\n")
         self.result_text.insert(tk.END, f"📞 月通话时长: {calls}分钟\n")
         self.result_text.insert(tk.END, f"💰 预算范围: {budget}元/月\n\n")
-    
+        
     def _display_no_recommendations(self, data: float, calls: float, budget: float) -> None:
         """显示无推荐结果的分析"""
         self.result_text.insert(tk.END, "😔 抱歉，没有找到完全符合您需求的套餐\n\n")
@@ -307,36 +307,36 @@ class RecommendationApp:
         reason = recommendation["match_reason"]
         usage_score = recommendation.get("usage_score", 0)
         price_score = recommendation.get("price_score", 0)
-        
+
         # 获取套餐规格
         specs = package.get("specs", {})
         carrier = package.get("carrier", "未知运营商")
-        
+
         # 标识最佳推荐
         if index == 1:
             self.result_text.insert(tk.END, f"🌟 【最佳推荐】 推荐 #{index}\n")
         else:
             self.result_text.insert(tk.END, f"📱 推荐 #{index}\n")
-        
+
         self.result_text.insert(tk.END, f"📡 运营商: {carrier}\n")
         self.result_text.insert(tk.END, f"📦 套餐名称: {package['name']}\n")
         self.result_text.insert(tk.END, f"📋 套餐类型: {package.get('type', '标准套餐')}\n")
         self.result_text.insert(tk.END, f"💵 月费: ¥{specs.get('price', 0)}\n")
         self.result_text.insert(tk.END, f"📊 流量: {specs.get('data', 0)}GB | 通话: {specs.get('calls', 0)}分钟\n")
         self.result_text.insert(tk.END, f"⭐ 综合评分: {score:.2f} (功能匹配: {usage_score:.2f} | 价格优势: {price_score:.2f})\n")
-        
+
         # 显示特色功能
         features = package.get('features', [])
         if features:
             features_str = "、".join(features)
             self.result_text.insert(tk.END, f"🎁 特色功能: {features_str}\n")
-        
+
         # 显示推荐理由
         self.result_text.insert(tk.END, f"💡 推荐理由: {reason}\n")
-        
+
         # 性价比分析
         self._display_value_analysis(specs)
-        
+
         self.result_text.insert(tk.END, "-" * 50 + "\n\n")
     
     def _display_value_analysis(self, specs: Dict) -> None:

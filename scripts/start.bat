@@ -31,13 +31,15 @@ goto start
 :start_gui
 echo.
 echo 🚀 启动GUI应用...
-call start_gui.bat
+cd /d %~dp0..
+call scripts\start_gui.bat
 goto end
 
 :start_api
 echo.
 echo 🚀 启动API服务器...
-call start_api.bat
+cd /d %~dp0..
+call scripts\start_api.bat
 goto end
 
 :show_info

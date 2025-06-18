@@ -11,7 +11,7 @@ import sys
 import json
 import time
 from datetime import datetime
-from code_standards import CodeStandardsChecker
+from .code_standards import CodeStandardsChecker
 
 
 def run_comprehensive_assessment():

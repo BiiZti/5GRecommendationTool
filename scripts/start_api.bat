@@ -1,4 +1,6 @@
 @echo off
+REM 切换到脚本上级目录（即项目根目录）
+cd /d %~dp0..
 echo 🚀 启动套餐推荐系统 - API服务器模式
 echo.
 
@@ -29,7 +31,7 @@ echo 💡 按 Ctrl+C 停止服务器
 echo.
 
 REM 启动API服务器
-python api_server.py
+python -m grec5.api_server
 
 if errorlevel 1 (
     echo.

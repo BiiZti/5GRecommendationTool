@@ -10,8 +10,9 @@ from flask_cors import CORS
 from typing import Dict, List, Optional
 import json
 
-from recommendation_engine import RecommendationEngine
-from data_sources import DataSourceManager
+from .recommendation_engine import RecommendationEngine
+from .data_sources import DataSourceManager
+from .data_sources import validate_package_data
 
 
 class RecommendationAPI:
@@ -271,7 +272,6 @@ class RecommendationAPI:
                     "error": "缺少packages参数"
                 }), 400
             
-            from data_sources import validate_package_data
             validation_errors = validate_package_data(request_data['packages'])
             
             return jsonify({

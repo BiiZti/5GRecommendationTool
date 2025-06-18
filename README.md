@@ -4,6 +4,12 @@
 
 这是一个**高度模块化、可扩展**的套餐推荐系统，基于数学评分算法提供精准的产品推荐服务。系统采用模块化设计，支持多运营商数据源，可通过GUI界面或REST API接口使用，具有很强的复用性和扩展性。
 
+[![Python](https://img.shields.io/badge/Python-3.7%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](tests/)
+[![Code Quality](https://img.shields.io/badge/Code%20Quality-7.75%2F10-yellow)](quality_assessment_report_20250617_030121.json)
+[![API](https://img.shields.io/badge/API-REST-orange)](API_DOCUMENTATION.md)
+
 ## 🌟 核心特性
 
 ### 📦 高度模块化设计
@@ -77,11 +83,32 @@
 
 ### 快速启动（推荐）
 
-1. 双击运行 `start.bat` 文件
-2. 选择启动模式：
-   - **GUI桌面应用** - 套餐推荐工具
-   - **API服务器模式** - REST API服务
-3. 等待自动安装依赖
+1. 运行 `scripts/start_gui.bat` 启动GUI
+2. 运行 `scripts/start_api.bat` 启动API
+3. 运行 `scripts/start.bat` 启动全部服务
+
+### 开发环境搭建
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/your-username/5GRecommendationTool.git
+cd 5GRecommendationTool
+
+# 2. 安装基础依赖
+pip install -r requirements.txt
+
+# 3. 安装开发依赖（可选）
+pip install -r requirements-dev.txt
+
+# 4. 运行测试
+python -m pytest tests/ -v
+
+# 5. 检查代码质量
+python run_quality_assessment.py
+
+# 6. 启动API服务
+python api_server.py
+```
 
 ### 手动启动
 
@@ -96,11 +123,61 @@ python gui.py
 python api_server.py
 ```
 
+## 🧪 测试
+
+项目包含完整的测试套件，确保代码质量和功能正确性。
+
+### 运行所有测试
+```bash
+python -m pytest tests/ -v
+```
+
+### 生成覆盖率报告
+```bash
+python -m pytest tests/ --cov=. --cov-report=html
+```
+
+### 运行特定测试
+```bash
+# 测试推荐引擎
+python -m pytest tests/test_recommendation_engine.py -v
+
+# 测试API服务器
+python -m pytest tests/test_api_server.py -v
+
+# 测试数据源
+python -m pytest tests/test_data_sources.py -v
+```
+
+## 📊 API文档
+
+系统提供完整的REST API接口，详见 [API文档](API_DOCUMENTATION.md)。
+
+### 主要接口
+
+- `GET /api/health` - 健康检查
+- `GET /api/carriers` - 获取运营商列表
+- `GET /api/packages` - 获取套餐列表
+- `POST /api/recommend` - 套餐推荐
+- `POST /api/recommend/batch` - 批量推荐
+
+### 快速测试API
+
+```bash
+# 健康检查
+curl http://127.0.0.1:5000/api/health
+
+# 获取推荐
+curl -X POST http://127.0.0.1:5000/api/recommend \
+  -H "Content-Type: application/json" \
+  -d '{"data": 30, "calls": 500, "budget": 150}'
+```
+
 ## 使用指南
 
 ### 基本使用步骤
 
-1. **启动应用**：双击`start.bat`或运行`python gui.py`
+1. **启动应用**：运行`scripts/start_gui.bat`或运行`python gui.py`
 2. **输入需求**：在左侧面板填写您的需求：
    - 每月流量需求 (GB)
    - 每月通话时长 (分钟)
@@ -140,19 +217,29 @@ RecommendationSystem/
 │   ├── gui.py                     # GUI桌面应用
 │   └── api_client_example.py      # API客户端示例
 │
+├── 🧪 测试套件
+│   ├── tests/__init__.py          # 测试包初始化
+│   ├── tests/test_recommendation_engine.py  # 推荐引擎测试
+│   ├── tests/test_data_sources.py           # 数据源测试
+│   └── tests/test_api_server.py             # API测试
+│
 ├── ⚙️ 配置和数据
 │   ├── config.json                # 系统配置文件
 │   ├── requirements.txt           # 项目依赖
+│   ├── requirements-dev.txt       # 开发依赖
+│   ├── pyproject.toml            # 现代Python项目配置
 │   └── start.bat                  # 快速启动脚本
 │
 ├── 📚 文档
 │   ├── README.md                  # 项目说明
-│   └── API_DOCS.md               # API接口文档
+│   ├── API_DOCUMENTATION.md       # API接口文档
+│   ├── CONTRIBUTING.md           # 贡献指南
+│   └── LICENSE                   # 开源协议
 │
-└── 🔧 扩展示例
-    ├── examples/                  # 使用示例
-    ├── plugins/                   # 插件扩展
-    └── tests/                     # 测试用例
+└── 🔧 开发工具
+    ├── .gitignore                # Git忽略文件
+    ├── run_quality_assessment.py # 代码质量评估
+    └── code_standards.py         # 代码标准检查
 ```
 
 ### 模块说明
@@ -201,8 +288,6 @@ RecommendationSystem/
 - **推荐结果**：最多10个推荐套餐，突出最佳推荐（🌟标识）
 - **性价比标签**：高性价比💎、性价比良好👍、标准价格⭐
 
-
-
 ## 扩展功能
 
 ### 可以扩展的功能
@@ -238,44 +323,60 @@ RecommendationSystem/
 ### Q: 应用启动失败怎么办？
 A: 请确保已安装Python 3.7+，并检查是否有防火墙或杀毒软件阻止运行。
 
-
-
 ### Q: 如何添加新的套餐数据？
 A: 编辑`gui.py`文件中的`PACKAGES_DATA`字典，按现有格式添加新套餐。
 
 ### Q: 推荐结果不准确？
 A: 推荐算法基于价格、流量、通话时长等因素。如需调整，可修改算法权重参数。
 
-## 贡献指南
+## 🤝 贡献指南
 
-欢迎提交Issue和Pull Request来改进这个项目。
+我们欢迎各种形式的贡献！请查看 [贡献指南](CONTRIBUTING.md) 了解详细信息。
 
-### 如何贡献
-1. Fork 本项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+### 快速贡献步骤
+
+1. Fork 项目
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+5. 开启 Pull Request
 
-## 许可证
+### 开发规范
 
-MIT License
+- 遵循 PEP 8 代码风格
+- 添加必要的测试用例
+- 更新相关文档
+- 确保所有测试通过
 
-## 更新日志
+## 📈 质量评估
 
-### v2.0.0 (2024年) - 🎉 模块化重构版本
-- ✅ **模块化架构**：核心推荐引擎独立化
-- ✅ **REST API服务**：完整的HTTP API接口
-- ✅ **多运营商支持**：可扩展的数据源管理
-- ✅ **配置系统**：JSON配置文件支持
-- ✅ **通用化设计**：推荐算法适用于多种产品
-- ✅ **API客户端示例**：完整的集成示例代码
-- ✅ **类型注解**：完整的Python类型提示
-- ✅ **错误处理**：完善的异常处理机制
+项目使用自动化质量评估系统，定期生成质量报告：
 
-### v1.0.0 (2024年) - 基础版本
-- ✅ 基础GUI界面实现
-- ✅ 数学评分推荐算法
-- ✅ 26种中国移动套餐数据
-- ✅ 简洁高效的推荐功能
-- ✅ 一键启动功能
+```bash
+# 运行完整质量评估
+python run_quality_assessment.py
+
+# 查看最新评估报告
+cat quality_assessment_report_*.json
+```
+
+
+## 📄 许可证
+
+本项目采用 [MIT License](LICENSE) 开源协议。
+
+## 🙏 致谢
+
+感谢所有为项目做出贡献的开发者！
+
+- 套餐数据来源：[中国移动官方](http://www.y576.com/aricle.asp?id=48)
+- 开源社区的宝贵建议和反馈
+
+## 📞 联系我们
+
+- **GitHub Issues**: [报告问题](https://github.com/your-username/5GRecommendationTool/issues)
+- **Pull Requests**: [贡献代码](https://github.com/your-username/5GRecommendationTool/pulls)
+
+---
+
+⭐ 如果这个项目对您有帮助，请给我们一个星标！

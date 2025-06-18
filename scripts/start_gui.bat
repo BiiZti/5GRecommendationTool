@@ -1,4 +1,6 @@
 @echo off
+REM 切换到脚本上级目录（即项目根目录）
+cd /d %~dp0..
 echo 🚀 启动套餐推荐系统 - GUI模式
 echo.
 
@@ -13,7 +15,7 @@ if errorlevel 1 (
 
 REM 启动GUI应用
 echo 📱 正在启动图形界面...
-python gui.py
+python -m grec5.gui
 
 if errorlevel 1 (
     echo.
