@@ -74,6 +74,12 @@ Fixes #issue_number
 3. 个性化推荐
 4. 实时数据更新
 
+## 贡献者授权协议（CLA）
+
+为保障项目的合规性和所有贡献的合法性，所有代码贡献者需签署贡献者授权协议（CLA）。请在提交 Pull Request 前，阅读并签署 [CLA 协议](https://cla.example.com/your-project)。
+
+如有疑问，请联系项目维护者。
+
 ## 📝 开发者资源
 
 ### 项目架构
@@ -123,7 +129,6 @@ Fixes #issue_number
 
 - GitHub Issues: 技术讨论和问题报告
 - Pull Requests: 代码审查和功能提交
-- 邮箱: your-email@example.com
 
 ## 📄 许可证
 
