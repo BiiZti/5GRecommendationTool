@@ -9,6 +9,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from typing import Dict, List, Optional
 import json
+import os
+import secrets
 
 from .recommendation_engine import RecommendationEngine
 from .data_sources import DataSourceManager
@@ -20,12 +22,36 @@ class RecommendationAPI:
     
     def __init__(self):
         self.app = Flask(__name__)
-        CORS(self.app)  # 允许跨域请求
+        # 设置安全的SECRET_KEY
+        self.app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+        
+        # 配置CORS
+        cors_config = {
+            'origins': ['http://localhost:5000', 'https://your-production-domain.com'],
+            'methods': ['GET', 'POST', 'PUT'],
+            'allow_headers': ['Content-Type'],
+            'expose_headers': ['X-Total-Count'],
+            'supports_credentials': True,
+            'max_age': 600
+        }
+        CORS(self.app, **cors_config)
         
         self.engine = RecommendationEngine()
         self.data_manager = DataSourceManager()
         
         self._setup_routes()
+        self._setup_security_headers()
+    
+    def _setup_security_headers(self):
+        """设置安全响应头"""
+        @self.app.after_request
+        def add_security_headers(response):
+            response.headers['X-Content-Type-Options'] = 'nosniff'
+            response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+            response.headers['X-XSS-Protection'] = '1; mode=block'
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+            response.headers['Content-Security-Policy'] = "default-src 'self'"
+            return response
     
     def _setup_routes(self):
         """设置API路由"""
@@ -305,20 +331,19 @@ class RecommendationAPI:
             }), 500
     
     def run(self, host='127.0.0.1', port=5000, debug=False):
-        """启动API服务器"""
-        print(f"🚀 推荐系统API服务器启动")
-        print(f"📡 地址: http://{host}:{port}")
-        print(f"📋 API文档:")
-        print(f"   GET  /api/health          - 健康检查")
-        print(f"   GET  /api/carriers        - 获取运营商列表")
-        print(f"   GET  /api/packages        - 获取套餐列表")
-        print(f"   POST /api/recommend       - 获取推荐")
-        print(f"   POST /api/batch-recommend - 批量推荐")
-        print(f"   GET  /api/config          - 获取配置")
-        print(f"   PUT  /api/config          - 更新配置")
-        print(f"   POST /api/validate        - 验证数据")
+        """运行API服务器"""
+        ssl_context = None
+        if os.environ.get('FLASK_ENV') == 'production':
+            # 生产环境使用SSL
+            ssl_context = 'adhoc'
+            debug = False
         
-        self.app.run(host=host, port=port, debug=debug)
+        self.app.run(
+            host=host,
+            port=port,
+            debug=debug,
+            ssl_context=ssl_context
+        )
 
 
 def create_sample_client():
